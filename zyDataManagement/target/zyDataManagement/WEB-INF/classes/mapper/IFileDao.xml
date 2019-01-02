@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.IFileDao">
+
+    <insert id="insertData" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO fms_file(userId, filePath, fileName, dataName, dataDesc, ipPath, createDate, updateDate, lookNumber,
+        deleted)
+        VALUES (#{userId}, #{filePath}, #{fileName}, #{dataName}, #{dataDesc}, #{ipPath}, #{createDate},
+        #{updateDate}, #{lookNumber}, #{deleted})
+    </insert>
+    <!--修改-->
+    <update id="updateDataDesc" parameterType="com.zy.entity.FmsFile">
+        update fms_file set dataDesc = #{dataDesc} where id = #{id}
+    </update>
+
+    <!--删除-->
+    <update id="deleteData" parameterType="com.zy.entity.FmsFile">
+        update fms_file set deleted = 0 where id = #{id}
+    </update>
+    <select id="getFileById" resultType="com.zy.entity.FmsFile">
+        select id, userId, filePath, fileName, dataName, dataDesc, ipPath, createDate, updateDate, lookNumber
+        from fms_file
+        WHERE id=#{id}
+    </select>
+    <!--查询列表-->
+    <select id="getFileList" resultType="com.zy.entity.FmsUserAndFile">
+        SELECT f.id,f.dataName,f.dataDesc,f.ipPath,f.createDate,f.updateDate,f.lookNumber, u.groupName,u.userName FROM
+        fms_file f
+        INNER JOIN
+        fms_user u ON f.userId = u.id
+        where deleted=1 and 1=1
+        <if test="dataName !=null and dataName!=''">
+            and f.dataName like CONCAT('%',#{dataName},'%')
+        </if>
+        <if test="groupName !=null and groupName!=''">
+            and u.groupName like CONCAT('%',#{groupName},'%')
+        </if>
+    </select>
+    <!--统计浏览次数-->
+    <update id="countLookNum" parameterType="com.zy.entity.FmsFile">
+        update fms_file set lookNumber = lookNumber+1 where id = #{id}
+    </update>
+
+</mapper>

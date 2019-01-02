@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.IUserDao">
+
+    <insert id="insertUser" parameterType="com.zy.entity.FmsUser">
+        insert into fms_user(userName,passWord,className,phone,groupName,role) values
+        (#{userName},#{passWord},#{className},#{phone},#{groupName},#{role})
+    </insert>
+
+    <select id="login" parameterType="com.zy.entity.FmsUser" resultType="com.zy.entity.FmsUser">
+        select * from fms_user where userName = #{userName};
+    </select>
+</mapper>
